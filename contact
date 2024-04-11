@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二级联动下拉框</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <form>
+    <label for="country">国家：</label>
+    <select id="country">
+      <option value="">请选择</option>
+      <option value="usa">美国</option>
+      <option value="other">其他国家</option>
+    </select>
+
+    <label for="region">地区：</label>
+    <select id="region" disabled>
+      <option value="">请选择</option>
+      <!-- 地区选项将由 jQuery 动态生成 -->
+    </select>
+
+    <!-- WhatsApp 链接 -->
+    <a id="whatsappLink" href="" style="display:none;">联系我们的WhatsApp</a>
+  </form>
+
+<script>
+$(document).ready(function(){
+  // 美国各州数据
+  var usaRegions = ["阿拉巴马州", "阿拉斯加州", "亚利桑那州", "……"]; // 省份数组
+
+  // 当国家下拉框发生变化时
+  $('#country').change(function(){
+    var selectedCountry = $(this).val(); // 获取选中的国家
+    
+    if (selectedCountry === 'usa') {
+      $('#region').prop('disabled', false); // 启用地区下拉框
+      populateRegions(usaRegions); // 填充美国各州数据
+    } else {
+      $('#region').prop('disabled', true); // 禁用地区下拉框
+      $('#region').empty().append('<option value="">请选择</option>'); // 清空地区下拉框
+      $('#whatsappLink').hide(); // 隐藏 WhatsApp 链接
+    }
+  });
+
+  // 当地区下拉框发生变化时
+  $('#region').change(function(){
+    var selectedRegion = $(this).val(); // 获取选中的地区
+    if(selectedRegion === "阿拉巴马州") {
+      $('#whatsappLink').show(); // 如果选择阿拉巴马州，显示 WhatsApp 链接
+      $('#whatsappLink').attr('href', 'https://wa.me/13456'); // 设置 WhatsApp 链接
+    } else if(selectedRegion === "阿拉斯加州") {
+      $('#whatsappLink').show(); // 如果选择阿拉斯加州，显示 WhatsApp 链接
+      $('#whatsappLink').attr('href', 'https://wa.me/88772'); // 设置 WhatsApp 链接
+    } else {
+      $('#whatsappLink').hide(); // 否则隐藏 WhatsApp 链接
+    }
+  });
+
+  // 根据传入的地区数组填充地区下拉框
+  function populateRegions(regions) {
+    $('#region').empty().append(function(){
+      var options = '<option value="">请选择</option>';
+      $.each(regions, function(index, region){
+        options += '<option value="' + region + '">' + region + '</option>';
+      });
+      return options;
+    });
+  }
+});
+</script>
+</body>
+</html>
